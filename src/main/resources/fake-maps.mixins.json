@@ -3,7 +3,9 @@
 	"package": "hecklar.fakemaps.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+	],
+	"client": [
+		"MapRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

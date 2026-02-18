@@ -15,7 +15,7 @@
 	"icon": "assets/fake-maps/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"client": [
 			"hecklar.fakemaps.FakeMaps"
 		]
 	},
