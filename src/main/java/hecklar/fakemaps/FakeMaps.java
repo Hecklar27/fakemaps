@@ -14,13 +14,29 @@ public class FakeMaps implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static boolean renderingEnabled = true;
+	public static boolean vanillaMapsEnabled = false;
+	public static boolean itemFramesEnabled = true;
 
 	@Override
 	public void onInitializeClient() {
 		KeyBinding toggleKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key.fake-maps.toggle",
+				InputUtil.Type.MOUSE,
+				GLFW.GLFW_MOUSE_BUTTON_5,
+				"category.fake-maps"
+		));
+
+		KeyBinding toggleVanillaMaps = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.fake-maps.toggle-vanilla-maps",
+				InputUtil.Type.MOUSE,
+				GLFW.GLFW_MOUSE_BUTTON_4,
+				"category.fake-maps"
+		));
+
+		KeyBinding toggleItemFrames = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.fake-maps.toggle-item-frames",
 				InputUtil.Type.KEYSYM,
-				GLFW.GLFW_KEY_M,
+				GLFW.GLFW_KEY_N,
 				"category.fake-maps"
 		));
 
@@ -28,6 +44,14 @@ public class FakeMaps implements ClientModInitializer {
 			while (toggleKey.wasPressed()) {
 				renderingEnabled = !renderingEnabled;
 				LOGGER.info("FakeMaps rendering: {}", renderingEnabled ? "ON" : "OFF");
+			}
+			while (toggleVanillaMaps.wasPressed()) {
+				vanillaMapsEnabled = !vanillaMapsEnabled;
+				LOGGER.info("Vanilla maps: {}", vanillaMapsEnabled ? "ON" : "OFF");
+			}
+			while (toggleItemFrames.wasPressed()) {
+				itemFramesEnabled = !itemFramesEnabled;
+				LOGGER.info("Item frames: {}", itemFramesEnabled ? "ON" : "OFF");
 			}
 		});
 	}

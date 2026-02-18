@@ -41,3 +41,4 @@ replay_*.log
 /CLAUDE.md
 /.claude/settings.local.json
 /nul
+/RENDERING_COSTS.txt

@@ -25,25 +25,27 @@ public class MapRendererMixin {
 
 	@Inject(at = @At("HEAD"), method = "draw", cancellable = true)
 	private void replaceMapRendering(MapRenderState state, MatrixStack matrices, VertexConsumerProvider vertexConsumers, boolean bl, int light, CallbackInfo ci) {
-		if (!FakeMaps.renderingEnabled) {
-			return; // Let vanilla map rendering through
+		// Red squares: draw them and cancel vanilla
+		if (FakeMaps.renderingEnabled) {
+			Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
+			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(WHITE_TEXTURE));
+			float z = -0.01f;
+			float b = BORDER_SIZE;
+
+			drawQuad(vertexConsumer, positionMatrix, 0, 0, 128, b, 0, 0, 0, 255, light, z);       // top
+			drawQuad(vertexConsumer, positionMatrix, 0, 128 - b, 128, 128, 0, 0, 0, 255, light, z); // bottom
+			drawQuad(vertexConsumer, positionMatrix, 0, b, b, 128 - b, 0, 0, 0, 255, light, z);     // left
+			drawQuad(vertexConsumer, positionMatrix, 128 - b, b, 128, 128 - b, 0, 0, 0, 255, light, z); // right
+			drawQuad(vertexConsumer, positionMatrix, b, b, 128 - b, 128 - b, 255, 0, 0, 255, light, z);
+
+			ci.cancel();
+			return;
 		}
 
-		Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
-		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(WHITE_TEXTURE));
-		float z = -0.01f;
-		float b = BORDER_SIZE;
-
-		// Black border as 4 edge strips (no overlap with fill)
-		drawQuad(vertexConsumer, positionMatrix, 0, 0, 128, b, 0, 0, 0, 255, light, z);       // top
-		drawQuad(vertexConsumer, positionMatrix, 0, 128 - b, 128, 128, 0, 0, 0, 255, light, z); // bottom
-		drawQuad(vertexConsumer, positionMatrix, 0, b, b, 128 - b, 0, 0, 0, 255, light, z);     // left
-		drawQuad(vertexConsumer, positionMatrix, 128 - b, b, 128, 128 - b, 0, 0, 0, 255, light, z); // right
-
-		// Red fill (inside the border, same z)
-		drawQuad(vertexConsumer, positionMatrix, b, b, 128 - b, 128 - b, 255, 0, 0, 255, light, z);
-
-		ci.cancel();
+		// No red squares — check if vanilla maps should render
+		if (!FakeMaps.vanillaMapsEnabled) {
+			ci.cancel(); // Vanilla maps off, just show empty item frames
+		}
 	}
 
 	@Unique
