@@ -3,6 +3,7 @@ package hecklar.fakemaps;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -39,6 +40,15 @@ public class FakeMaps implements ClientModInitializer {
 				GLFW.GLFW_KEY_N,
 				"category.fake-maps"
 		));
+
+		// Flush batched map quads after entity rendering
+		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+			if (renderingEnabled) {
+				MapQuadBatcher.flush(context.consumers());
+			} else {
+				MapQuadBatcher.clear();
+			}
+		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (toggleKey.wasPressed()) {

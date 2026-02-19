@@ -6,7 +6,8 @@
 	],
 	"client": [
 		"MapRendererMixin",
-		"EntityRenderDispatcherMixin"
+		"EntityRenderDispatcherMixin",
+		"ItemFrameEntityRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
